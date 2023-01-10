@@ -12,7 +12,7 @@ COPY . .
 RUN dotnet publish -c Release -o /app
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM mcr.hamdocker.ir/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app .
 ENV     ASPNETCORE_URLS=http://+:5001
