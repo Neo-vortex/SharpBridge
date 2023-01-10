@@ -6,9 +6,9 @@ namespace SharpBridge.Services;
 
 public class Dispatcher
 {
-    private static readonly ConcurrentDictionary<Guid ,  List<ManagedWebSocket> > ManagedWebSockets = new();
+    private  readonly ConcurrentDictionary<Guid ,  List<ManagedWebSocket> > ManagedWebSockets = new();
 
-    private static readonly ConcurrentDictionary< Guid ,ManagedWalletConnectMessage> ManagedWalletConnectMessages = new();
+    private  readonly ConcurrentDictionary< Guid ,ManagedWalletConnectMessage> ManagedWalletConnectMessages = new();
 
 
     public Dispatcher()
