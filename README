@@ -1,5 +1,5 @@
-##WalletConnct Bridge
+## WalletConnct Bridge
 This is a .Net implematation of WallectConnect protocol (https://docs.walletconnect.com/).
 It is designed to be fast and thread-safe.
-it only supports in memory dictionary and version 1 of the protocol for the moment.
+it only supports in memory dictionary and version 1 of the protocol at the moment.
 
