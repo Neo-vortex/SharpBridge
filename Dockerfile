@@ -1,6 +1,6 @@
 
 # https://hub.docker.com/_/microsoft-dotnet
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM  mcr.hamdocker.ir/dotnet/sdk:7.0 AS build
 WORKDIR /SharpBridge
 
 # copy csproj and restore as distinct layers
