@@ -1,13 +1,7 @@
 
 # https://hub.docker.com/_/microsoft-dotnet
 FROM  mcr.hamdocker.ir/dotnet/sdk:7.0 AS build
-WORKDIR /SharpBridge
 
-# copy csproj and restore as distinct layers
-COPY *.csproj .
-RUN dotnet restore --use-current-runtime  
-
-# copy everything else and build app
 COPY . .
 RUN dotnet publish -c Release -o /app
 
