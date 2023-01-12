@@ -26,9 +26,7 @@ public class Comminucator
                 var len = (await managedWebSocket.WebSocket.ReceiveAsync(
                     new ArraySegment<byte>(buffer), CancellationToken.None)).Count;
                 var pure = buffer.SkipLast((1024 * 100) - len).ToArray();
-                #if DEBUG
-                    _logger.LogInformation(System.Text.Encoding.UTF8.GetString(pure));
-                #endif
+                _logger.LogInformation(System.Text.Encoding.UTF8.GetString(pure));
                 var managedMessage = new ManagedWalletConnectMessage()
                 {
                     Binary = pure,
