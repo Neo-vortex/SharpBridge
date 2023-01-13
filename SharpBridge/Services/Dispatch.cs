@@ -87,22 +87,20 @@ public class Dispatch
     private async Task<bool> DispatchMessages(ManagedWalletConnectMessage message)
     {
         var result = false;
-        foreach (var pair in _managedWebSockets)
+        if (!_managedWebSockets.ContainsKey((Guid)message.Message.Topic!)) return result;
+        var clients = _managedWebSockets[ (Guid) message.Message.Topic!]; 
+        foreach (var client in clients)
         {
-            if (pair.Key != message.Message.Topic) continue;
-            foreach (var clients in pair.Value)
+            try
             {
-                try
-                {
-                   await clients.WebSocket.SendAsync(new ReadOnlyMemory<byte>((message.Binary)),
-                        WebSocketMessageType.Text, true, CancellationToken.None).AsTask().WaitAsync(CancellationToken.None);
-                   result = true;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogWarning("Failed to write message to websocket pipeline." + Environment.NewLine + e.Message);
-                    RemoveWebSocket(clients.ID);
-                }
+                await client.WebSocket.SendAsync(new ReadOnlyMemory<byte>((message.Binary)),
+                    WebSocketMessageType.Text, true, CancellationToken.None).AsTask().WaitAsync(CancellationToken.None);
+                result = true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Failed to write message to websocket pipeline." + Environment.NewLine + e.Message);
+                RemoveWebSocket(client.ID);
             }
         }
         return result;
