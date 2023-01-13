@@ -6,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton(typeof(Comminucator));
-builder.Services.AddSingleton(typeof(Dispatcher));
+builder.Services.AddSingleton(typeof(Comminucation));
+builder.Services.AddSingleton(typeof(Dispatch));
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

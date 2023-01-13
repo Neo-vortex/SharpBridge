@@ -3,12 +3,12 @@ using SharpBridge.Models;
 
 namespace SharpBridge.Services;
 
-public class Comminucator
+public class Comminucation
 {
-    private readonly Dispatcher _dispatcher;
-    private readonly ILogger<Comminucator> _logger;
+    private readonly Dispatch _dispatcher;
+    private readonly ILogger<Comminucation> _logger;
 
-    public Comminucator(Dispatcher dispatcher, ILogger<Comminucator> logger)
+    public Comminucation(Dispatch dispatcher, ILogger<Comminucation> logger)
     {
         _dispatcher = dispatcher;
         _logger = logger;
@@ -22,7 +22,7 @@ public class Comminucator
         {
             try
             {
-                Array.Clear(buffer , 0, buffer.Length);
+                Array.Clear(buffer, 0, buffer.Length);
                 var len = (await managedWebSocket.WebSocket.ReceiveAsync(
                     new ArraySegment<byte>(buffer), CancellationToken.None)).Count;
                 var pure = buffer.SkipLast((1024 * 100) - len).ToArray();
@@ -38,20 +38,23 @@ public class Comminucator
                         _dispatcher.AddNewMessage(managedMessage);
                         break;
                     case "sub":
-                        _dispatcher.AddNewWebSocket(managedWebSocket with {Topic = (Guid) managedMessage.Message.Topic!} );
+                        _dispatcher.AddNewWebSocket(managedWebSocket with
+                        {
+                            Topic = (Guid)managedMessage.Message.Topic!
+                        });
                         break;
                     case "ack":
                         break;
                 }
-              
+
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _dispatcher.RemoveWebSocket(managedWebSocket.ID);
                 break;
             }
-
         }
+        _dispatcher.RemoveWebSocket(managedWebSocket.ID);
     }
     
 }

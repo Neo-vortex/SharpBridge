@@ -8,9 +8,9 @@ namespace SharpBridge.Controllers;
 
 public class WalletConnectBridge : ControllerBase
 {
-    private readonly Comminucator _comminucator;
+    private readonly Comminucation _comminucator;
 
-    public WalletConnectBridge(Comminucator comminucator)
+    public WalletConnectBridge(Comminucation comminucator)
     {
         _comminucator = comminucator;
     }
