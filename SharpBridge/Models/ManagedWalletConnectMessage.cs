@@ -8,8 +8,8 @@ public class ManagedWalletConnectMessage
         ID = Guid.NewGuid();
     }
 
-    public  WalletConnectMessage Message { get; set; }
-    public byte[] Binary { get; set; }
+    public  WalletConnectMessage Message { get; init; }
+    public byte[] Binary { get; init; }
     
     private DateTime CreationTime { get; set; }
     

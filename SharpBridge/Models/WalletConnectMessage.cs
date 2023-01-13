@@ -65,7 +65,7 @@ public class DateOnlyConverter : JsonConverter<DateOnly>
     {
     }
 
-    public DateOnlyConverter(string? serializationFormat)
+    private DateOnlyConverter(string? serializationFormat)
     {
         this.serializationFormat = serializationFormat ?? "yyyy-MM-dd";
     }
@@ -90,7 +90,7 @@ public class TimeOnlyConverter : JsonConverter<TimeOnly>
     {
     }
 
-    public TimeOnlyConverter(string? serializationFormat)
+    private TimeOnlyConverter(string? serializationFormat)
     {
         this.serializationFormat = serializationFormat ?? "HH:mm:ss.fff";
     }
@@ -116,7 +116,7 @@ internal class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
     private CultureInfo? _culture;
     private string? _dateTimeFormat;
 
-    public DateTimeStyles DateTimeStyles { get; set; } = DateTimeStyles.RoundtripKind;
+    private DateTimeStyles DateTimeStyles { get; set; } = DateTimeStyles.RoundtripKind;
 
     public string? DateTimeFormat
     {
@@ -124,7 +124,7 @@ internal class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
         set => _dateTimeFormat = string.IsNullOrEmpty(value) ? null : value;
     }
 
-    public CultureInfo Culture
+    private CultureInfo Culture
     {
         get => _culture ?? CultureInfo.CurrentCulture;
         set => _culture = value;
@@ -137,14 +137,11 @@ internal class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
 
     public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
     {
-        string text;
-
-
         if ((DateTimeStyles & DateTimeStyles.AdjustToUniversal) == DateTimeStyles.AdjustToUniversal
             || (DateTimeStyles & DateTimeStyles.AssumeUniversal) == DateTimeStyles.AssumeUniversal)
             value = value.ToUniversalTime();
 
-        text = value.ToString(_dateTimeFormat ?? DefaultDateTimeFormat, Culture);
+        var text = value.ToString(_dateTimeFormat ?? DefaultDateTimeFormat, Culture);
 
         writer.WriteStringValue(text);
     }
@@ -153,8 +150,10 @@ internal class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
     {
         var dateText = reader.GetString();
 
-        if (string.IsNullOrEmpty(dateText) != false) return default;
-        return !string.IsNullOrEmpty(_dateTimeFormat) ? DateTimeOffset.ParseExact(dateText, _dateTimeFormat, Culture, DateTimeStyles) : DateTimeOffset.Parse(dateText, Culture, DateTimeStyles);
+        if (string.IsNullOrEmpty(dateText)) return default;
+        return !string.IsNullOrEmpty(_dateTimeFormat)
+            ? DateTimeOffset.ParseExact(dateText, _dateTimeFormat, Culture, DateTimeStyles)
+            : DateTimeOffset.Parse(dateText, Culture, DateTimeStyles);
     }
 }
 #pragma warning restore CS8618

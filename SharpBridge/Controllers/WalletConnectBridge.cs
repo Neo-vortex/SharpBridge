@@ -28,7 +28,7 @@ public class WalletConnectBridge : ControllerBase
         }
         else
         {
-            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await HttpContext.Response.WriteAsync("You need to connect via WebSocket protocol");
         }
     }
 }
