@@ -44,11 +44,11 @@ public class Dispatch
                     {
                         if (result)
                         {
-                            _logger.LogWarning($"Message {message.ID} delivered");
+                            _logger.LogInformation($"Message {message.ID} delivered");
                         }
                         else
                         {
-                            _logger.LogInformation($"Message {message.ID} delivered");
+                            _logger.LogWarning($"Message {message.ID} expired");
                         }
                         
                     }
