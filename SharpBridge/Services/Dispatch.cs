@@ -42,9 +42,9 @@ public class Dispatch
                     }
                     else
                     {
-                        if (message.Expired)
+                        if (result)
                         {
-                            _logger.LogWarning($"Message {message.ID} expired");
+                            _logger.LogWarning($"Message {message.ID} delivered");
                         }
                         else
                         {
