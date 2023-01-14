@@ -54,6 +54,7 @@ This implementation supports multiple sub/pub per Topic. Unlike some other imple
 
 - Faster JSON serilize and deserilize with source generation in C#
 
+- Writing Tests
 
 ## License
 
