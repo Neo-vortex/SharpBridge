@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
+using System.Security.Cryptography;
 using SharpBridge.Models;
 
 namespace SharpBridge.Services;
@@ -30,8 +31,21 @@ public class Dispatch
             try
             {
                 var message =   _managedWalletConnectMessages.Take(token);
-                var result= await  DispatchMessages(message);
-                if (!message.Expired & ! result)
+                if (  DateTime.UtcNow - message.LastTry  > TimeSpan.FromSeconds(2))
+                {
+                    _logger.LogInformation($"processing { message.ID } from thread {Thread.CurrentThread.ManagedThreadId}");
+                    var result= await  DispatchMessages(message);
+                    message.LastTry = DateTime.UtcNow;
+                    if (!message.Expired & ! result)
+                    {
+                        _managedWalletConnectMessages.Add(message, token);
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"Message {message.ID} expired");
+                    }
+                }
+                else
                 {
                     _managedWalletConnectMessages.Add(message, token);
                 }
@@ -50,13 +64,15 @@ public class Dispatch
     {
         foreach (var clients in _managedWebSockets)
         {
-            foreach (var client in clients.Value.Where(client => client.ID == id))
+            var counter = 0;
+            foreach (var client  in clients.Value.Where(client => client.ID == id))
             {
                 _managedWebSockets.TryUpdate(clients.Key, clients.Value.Where(client => client.ID != id).ToList(),
                     clients.Value);
                 if (_managedWebSockets[clients.Key].Count != 0) continue;
                 var result =     _managedWebSockets.TryRemove(clients.Key, out _);
-                _logger.LogInformation(result ? $"WebSocket {id} was closed" : $"WebSocket {id} was failed to closed");
+                _logger.LogInformation(result ? $"WebSocket {id} with handler {counter} was closed" : $"WebSocket {id} was failed to closed");
+                counter++;
             }
         }
     }

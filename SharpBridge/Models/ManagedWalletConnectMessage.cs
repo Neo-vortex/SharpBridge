@@ -13,7 +13,9 @@ public class ManagedWalletConnectMessage
     
     private DateTime CreationTime { get; set; }
     
-    public bool Expired => DateTime.UtcNow - CreationTime > TimeSpan.FromMinutes(5);
+    public bool Expired => DateTime.UtcNow - CreationTime > TimeSpan.FromMinutes(2);
     
     public Guid ID { get; set; }
+
+    public DateTime LastTry { get; set; } = DateTime.MinValue;
 }
